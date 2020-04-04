@@ -1,5 +1,8 @@
 "use strict";
 
+// Manual selection
+window.init.theme = '';
+
 // Boot stuff when DOM is loaded
 $(function () {
 	console.group('Dark Fomantic-UI');
