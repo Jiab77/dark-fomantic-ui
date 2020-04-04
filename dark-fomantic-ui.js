@@ -25,7 +25,9 @@
 "use strict";
 
 // Manual selection
-window.init.theme = '';
+window.init = {
+	theme: ''
+};
 
 // Boot stuff when DOM is loaded
 $(function () {
