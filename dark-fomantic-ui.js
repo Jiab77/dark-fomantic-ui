@@ -36,14 +36,17 @@ $(function () {
 
 	// ui theme elements
 	var $themeElements = [
-		{ name: 'dividingHeaders', target: $('.ui.dividing.header') },
-		{ name: 'iconHeaders', target: $('.ui.icon.header') },
+		{ name: 'dividingHeaders', target: $('.ui.dividing.header').not('.inverted') },
+		{ name: 'iconHeaders', target: $('.ui.icon.header').not('.inverted') },
+		{ name: 'headers', target: $('.ui.header').not('.inverted') },
+		{ name: 'forms', target: $('.ui.form').not('.inverted') },
 		{ name: 'tooltippedIcons', target: $('.tooltipped.icon') },
 		{ name: 'cardsContainer', target: $('.ui.cards') },
 		{ name: 'cards', target: $('.ui.card') },
 		{ name: 'dropdowns', target: $('.ui.dropdown') },
 		{ name: 'fixedMenu', target: $('.ui.top.fixed.menu') },
 		{ name: 'breadcrumb', target: $('.ui.breadcrumb') },
+		{ name: 'accordions', target: $('.ui.accordion').not('.styled').not('.inverted') },
 		{ name: 'tables', target: $('.ui.table') },
 		{ name: 'segments', target: $('.ui.segment').not('.inverted') },
 		{ name: 'placeholders', target: $('.ui.placeholder') }
@@ -74,17 +77,28 @@ $(function () {
 		$themeValue.text((darkMatcher.matches === true ? 'dark' : 'light') + ' (media-query)');
 		window.init.theme = (darkMatcher.matches === true ? 'dark' : 'light');
 
+		// try to restore existing user selection first
+		if (storageAvailable('sessionStorage')) {
+			// Great! We can use sessionStorage awesomeness
+			restoreState();
+		}
+
+		// apply detected theme anyway
+		else {
+			// Too bad, no sessionStorage for us
+			console.warn('Storage [sessionStorage] no available. Applying detected theme.');
+		}
+
 		// initial theme buttons state
-		if (darkMatcher.matches === true) {
+		if (darkMatcher.matches === true || window.init.theme === 'dark') {
 			$lightThemeButton.toggleClass('hide');
 		}
 		else {
 			$darkThemeButton.toggleClass('hide');
 		}
 
-		// apply initial theme
+		// apply defined theme
 		applyTheme();
-
 	}
 
 	console.groupEnd();
@@ -106,6 +120,9 @@ $(function () {
 			clearTimeout(toggleState);
 		}, 600);
 
+		// refresh DOM elements
+		// refresh();
+
 		// apply defined theme
 		applyTheme();
 
@@ -126,6 +143,9 @@ $(function () {
 			switchButtons();
 			clearTimeout(toggleState);
 		}, 600);
+
+		// refresh DOM elements
+		// refresh();
 
 		// apply defined theme
 		applyTheme();
@@ -160,7 +180,7 @@ $(function () {
 
 	// light / dark theme apply
 	function applyTheme() {
-		console.log('Theme applied.', (!event ? '(auto)' : event));
+		console.log('Theme applied.', (!event ? '(auto/session)' : event));
 		console.log('New theme value:', window.init.theme);
 		console.log('Dark mode is ' + (window.init.theme === 'dark' ? '🌒 on' : '☀️ off') + '.');
 		console.log('Theme elements:');
@@ -206,6 +226,86 @@ $(function () {
 				// Remove dark theme on tooltips
 				$('.tooltipped').attr('data-variation', '');
 				break;
+		}
+
+		// Save user selection
+		saveState(window.init.theme);
+	}
+
+	// Detect dynamic elements
+	function refresh() {
+		$themeElements = null;
+		$themeElements = [
+			{ name: 'dividingHeaders', target: $('.ui.dividing.header') },
+			{ name: 'iconHeaders', target: $('.ui.icon.header') },
+			{ name: 'tooltippedIcons', target: $('.tooltipped.icon') },
+			{ name: 'cardsContainer', target: $('.ui.cards') },
+			{ name: 'cards', target: $('.ui.card') },
+			{ name: 'dropdowns', target: $('.ui.dropdown') },
+			{ name: 'fixedMenu', target: $('.ui.top.fixed.menu') },
+			{ name: 'breadcrumb', target: $('.ui.breadcrumb') },
+			{ name: 'accordions', target: $('.ui.accordion').not('.styled').not('.inverted') },
+			{ name: 'tables', target: $('.ui.table') },
+			{ name: 'segments', target: $('.ui.segment').not('.inverted') },
+			{ name: 'placeholders', target: $('.ui.placeholder') }
+		];
+	}
+
+	// Detect if the Web Storage API is available
+	// Taken from: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+	function storageAvailable(type) {
+		var storage;
+		try {
+			storage = window[type];
+			var x = '__storage_test__';
+			storage.setItem(x, x);
+			storage.removeItem(x);
+			return true;
+		}
+		catch(e) {
+			return e instanceof DOMException && (
+				// everything except Firefox
+				e.code === 22 ||
+				// Firefox
+				e.code === 1014 ||
+				// test name field too, because code might not be present
+				// everything except Firefox
+				e.name === 'QuotaExceededError' ||
+				// Firefox
+				e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+				// acknowledge QuotaExceededError only if there's something already stored
+				(storage && storage.length !== 0);
+		}
+	}
+
+	// Store user selection in sessionStorage
+	function restoreState() {
+		if (storageAvailable('sessionStorage')) {
+			// Great! We can use sessionStorage awesomeness
+			console.log('Restoring user selection from session storage.');
+			window.init.theme = sessionStorage.getItem('currentTheme');
+
+			// toggle theme buttons
+			// switchButtons();
+		}
+		else {
+			// Too bad, no sessionStorage for us
+			console.warn('Storage [sessionStorage] no available. Can\'t restore user selected theme.');
+		}
+	}
+
+	// Store user selection in sessionStorage
+	function saveState(theme) {
+		if (storageAvailable('sessionStorage')) {
+			// Great! We can use sessionStorage awesomeness
+			if (theme !== null) {
+				console.log('Saving user selection to session storage.');
+				sessionStorage.setItem('currentTheme', theme);
+			}
+		}
+		else {
+			// Too bad, no sessionStorage for us
+			console.warn('Storage [sessionStorage] no available. Can\'t store user selected theme.');
 		}
 	}
 });
