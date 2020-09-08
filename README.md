@@ -1,6 +1,6 @@
 # dark-fomantic-ui
 
-Adds Dark Theme selector and auto-detection logic to [Fomantic-UI](https://github.com/fomantic/fomantic-ui)
+Adds __Dark Theme__ selector and system theme auto-detection logic to [Fomantic-UI](https://github.com/fomantic/fomantic-ui)
 
 ## Configuration
 
@@ -56,9 +56,9 @@ To include the code in your project, simply add it after your [Fomantic UI](http
 <script type="text/javascript" id="dark-ui-js" src="dark-fomantic-ui.js"></script>
 ```
 
-## Autodetection
+## Auto-detection
 
-The theme autodetection feature is based on [window.matchMedia](https://developer.mozilla.org/en/docs/Web/API/Window/matchMedia) and [prefers-color-scheme](https://developer.mozilla.org/en/docs/Web/CSS/@media/prefers-color-scheme).
+The system theme auto-detection feature is based on [window.matchMedia](https://developer.mozilla.org/en/docs/Web/API/Window/matchMedia) and [prefers-color-scheme](https://developer.mozilla.org/en/docs/Web/CSS/@media/prefers-color-scheme).
 
 ## Screenshots
 
@@ -74,6 +74,8 @@ Dark:
 
 ![image](https://user-images.githubusercontent.com/9881407/92534459-1b187e80-f235-11ea-9bff-64b4bc66a408.png)
 
+> There is a small toggle animation when moving over the buttons.
+
 ### Sample results
 
 > From the [Nmap WebUI](https://github.com/Jiab77/nmap-webui) project.
@@ -85,3 +87,11 @@ Light theme:
 Dark theme:
 
 ![image](https://user-images.githubusercontent.com/9881407/92534671-aa259680-f235-11ea-8b3e-82e224661df6.png)
+
+## Thanks
+
+I just wanted to give a huge thanks to the [Fomantic UI](https://github.com/fomantic/fomantic-ui) team for their amazing work!
+
+## Contact
+
+* Twitter: [@Jiab77](https://twitter.com/Jiab77)
